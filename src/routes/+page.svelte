@@ -56,7 +56,7 @@
                         <button class="flex flex-1 btn" formaction="?/spendClicks">Spend 100 clicks</button>
                     </div>
                 </form>
-                {#if multiplier == 0}
+                {#if multiplier < 1}
                     <p class="text-sm py-2 text-sky-500">Multiplier: x{multiplier}</p>
                 {:else if multiplier == 1}
                     <p class="text-sm py-2">Multiplier: x{multiplier}</p>
