@@ -11,13 +11,13 @@ export const actions = {
 
         const { data, error } = await supabaseClient
         .from('instant-data')
-        .select("clicks")
+        .select("clicks, multiplier")
 
         if (data?.at(0)?.clicks != null) {
 
             const { error } = await supabaseClient
             .from('instant-data')
-            .update({ clicks: data?.at(0)?.clicks + 1 })
+            .update({ clicks: data?.at(0)?.clicks + (1 * data?.at(0)?.multiplier) })
             .eq('id', 1)
             
         }
