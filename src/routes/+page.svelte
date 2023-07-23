@@ -4,35 +4,34 @@
 
     let number: Number;
     let multiplier: number = 1;
+    let spentClicks: Number = 0;
 
     async function getCurrent() {
         const { data, error } = await supabaseClient
         .from('instant-data')
-        .select("clicks")
+        .select("clicks, multiplier, spent_clicks")
 
         if (data?.at(0)?.clicks != null) {
             number = data?.at(0)?.clicks;
         }
-    }
-
-    async function getMultiplier() {
-        const { data, error } = await supabaseClient
-        .from('instant-data')
-        .select("multiplier")
 
         if (data?.at(0)?.multiplier != null) {
             multiplier = data.at(0)?.multiplier;
         }
+
+        if (data?.at(0)?.multiplier != null) {
+            spentClicks = data.at(0)?.spent_clicks;
+        }
     }
 
     let promise = getCurrent();
-    getMultiplier();
     
     supabaseClient
         .channel('any')
         .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'instant-data' }, payload => {
                 number = payload.new.clicks
                 multiplier = payload.new.multiplier
+                spentClicks = payload.new.spent_clicks
             })
         .subscribe()
 
@@ -46,11 +45,20 @@
             {#await promise}
                 <p class="py-6">Fetching number...</p>
             {:then}
-                <form method="POST" action="?/updateClicks" use:enhance>
-                    <p class="py-6">{number}</p>
-                    <button class="btn btn-primary">Click Me</button>
+                <form method="POST" use:enhance>
+                    <div class="flex">
+                        <p class="flex flex-1 py-6 text-lime-500">{number}</p>
+                        <p class="flex flex-1 justify-end py-6 text-emerald-500">{spentClicks}</p>
+                    </div>
+
+                    <div class="flex">
+                        <button class="btn btn-primary flex flex-1" formaction="?/updateClicks">Click Me</button>
+                        <button class="flex flex-1 btn" formaction="?/spendClicks">Spend 100 clicks</button>
+                    </div>
                 </form>
-                {#if multiplier == 1}
+                {#if multiplier == 0}
+                    <p class="text-sm py-2 text-sky-500">Multiplier: x{multiplier}</p>
+                {:else if multiplier == 1}
                     <p class="text-sm py-2">Multiplier: x{multiplier}</p>
                 {:else if multiplier >= 2 && multiplier < 6}
                     <p class="text-sm py-2 text-amber-300">Multiplier: x{multiplier}</p>

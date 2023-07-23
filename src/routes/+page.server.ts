@@ -11,7 +11,7 @@ export const actions = {
 
         const { data, error } = await supabaseClient
         .from('instant-data')
-        .select("clicks, multiplier")
+        .select("clicks, multiplier, spent_clicks")
 
         if (data?.at(0)?.clicks != null) {
 
@@ -20,6 +20,21 @@ export const actions = {
             .update({ clicks: data?.at(0)?.clicks + (1 * data?.at(0)?.multiplier) })
             .eq('id', 1)
             
+        }
+    },
+
+    spendClicks: async ({ request }) => {
+        const { data, error } = await supabaseClient
+        .from('instant-data')
+        .select("clicks, multiplier, spent_clicks")
+
+        if (data?.at(0)?.clicks >= 100) {
+
+            const { error } = await supabaseClient
+            .from('instant-data')
+            .update({ clicks: data?.at(0)?.clicks - 100, spent_clicks: data?.at(0)?.spent_clicks + 100 })
+            .eq('id', 1)
+
         }
     }
 
