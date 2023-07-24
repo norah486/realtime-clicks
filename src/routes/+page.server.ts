@@ -17,7 +17,7 @@ export const actions = {
 
             const { error } = await supabaseClient
             .from('instant-data')
-            .update({ clicks: data?.at(0)?.clicks + ( 1 * data?.at(0)?.multiplier * (data?.at(0)?.spent_clicks / 10000) ) })
+            .update({ clicks: data?.at(0)?.clicks + ( 1 * Math.floor(data?.at(0)?.multiplier * (data?.at(0)?.spent_clicks / 10000)) ) })
             .eq('id', 1)
 
         }
