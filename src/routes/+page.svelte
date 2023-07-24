@@ -5,11 +5,12 @@
     let number: Number;
     let multiplier: number = 1;
     let spentClicks: Number = 0;
+    let message: String|null;
 
     async function getCurrent() {
         const { data, error } = await supabaseClient
         .from('instant-data')
-        .select("clicks, multiplier, spent_clicks")
+        .select("clicks, multiplier, spent_clicks, message")
 
         if (data?.at(0)?.clicks != null) {
             number = data?.at(0)?.clicks;
@@ -22,6 +23,8 @@
         if (data?.at(0)?.multiplier != null) {
             spentClicks = data.at(0)?.spent_clicks;
         }
+
+        message = data?.at(0)?.message;
     }
 
     let promise = getCurrent();
@@ -32,6 +35,7 @@
                 number = payload.new.clicks
                 multiplier = payload.new.multiplier
                 spentClicks = payload.new.spent_clicks
+                message = payload.new.message
             })
         .subscribe()
 
@@ -53,7 +57,7 @@
 
                     <div class="flex">
                         <button class="btn btn-primary flex flex-1" formaction="?/updateClicks">Click Me</button>
-                        <button class="flex flex-1 btn" formaction="?/spendClicks">Spend 100 clicks</button>
+                        <button class="flex flex-1 btn btn-error" formaction="?/spendClicks">Spend 100 clicks</button>
                     </div>
                 </form>
                 {#if multiplier < 1}
@@ -65,7 +69,10 @@
                 {:else if multiplier >= 6}
                     <p class="text-sm py-2 text-red-700">Multiplier: x{multiplier}</p>
                 {/if}
-                <p class="text-sm py-2 blur-sm">Things will happen</p>
+                
+                {#if message != null}
+                    <p class="py-2 font-bold font-mono text-xl text-fuchsia-300">{message}</p>
+                {/if}
             {/await}
         </div>
     </div>
