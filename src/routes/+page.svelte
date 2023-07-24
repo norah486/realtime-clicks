@@ -132,7 +132,7 @@
                     <p class="text-sm py-2 text-sky-500">Multiplier: x{multiplier}</p>
                 {:else if multiplier == 1}
                     <p class="text-sm py-2">Multiplier: x{multiplier}</p>
-                {:else if multiplier >= 2 && multiplier < 6}
+                {:else if multiplier > 1 && multiplier < 6}
                     <p class="text-sm py-2 text-amber-300">Multiplier: x{multiplier}</p>
                 {:else if multiplier >= 6}
                     <p class="text-sm py-2 text-red-700">Multiplier: x{multiplier}</p>

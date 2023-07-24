@@ -9,15 +9,29 @@ export const actions = {
 
     updateClicks: async ({ request }) => {
 
+        let shopItemsGives: number = 0;
+
+        const { data: shopData, error: shopErr} = await supabaseClient
+        .from('shop')
+        .select()
+
+        if (shopData) {
+            shopData.forEach(item => {
+                shopItemsGives += ( item.gives * item.amount )
+            });
+        }
+
         const { data, error } = await supabaseClient
         .from('instant-data')
         .select("clicks, multiplier, spent_clicks")
 
         if (data?.at(0)?.clicks != null) {
 
+            let clickPlus = ( 1 * Math.floor( (data?.at(0)?.multiplier * (1 + data?.at(0)?.spent_clicks / 100000)) + shopItemsGives ) )
+
             const { error } = await supabaseClient
             .from('instant-data')
-            .update({ clicks: data?.at(0)?.clicks + ( 1 * Math.floor(data?.at(0)?.multiplier * (1 + (data?.at(0)?.spent_clicks / 100000)) )) })
+            .update({ clicks: data?.at(0)?.clicks + clickPlus })
             .eq('id', 1)
 
         }
