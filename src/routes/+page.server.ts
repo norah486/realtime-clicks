@@ -42,11 +42,13 @@ export const actions = {
         .from('instant_data')
         .select("clicks, multiplier, spent_clicks")
 
-        if (data?.at(0)?.clicks >= 100) {
+        const spendAmount = 100 + (Math.floor(Math.E * data?.at(0)?.multiplier + ((data?.at(0)?.clicks + data?.at(0)?.spent_clicks)/25000)))
+
+        if (data?.at(0)?.clicks >= spendAmount) {
 
             const { error } = await supabaseClient
             .rpc("decreaseClicks", {
-                amount: 100
+                amount: spendAmount
             })
 
         }
@@ -129,39 +131,41 @@ export const actions = {
         .from('instant_data')
         .select()
 
-        const rNumber = Math.floor(Math.random() * 3500) + 1;
+        if (data?.at(0)?.multiplier > 0) {
+            const rNumber = Math.floor(Math.random() * 3500) + 1;
 
-        let newMult: Number;
-        const gachaMult = Math.random()
-        if (gachaMult < 0.85) {
-            newMult = Number((Math.random() * 1 + 1).toFixed(1));
-        } else {
-            newMult = Number((Math.random() * 3 + 3).toFixed(1));
-        }
-
-        const uses = Math.random() < 0.5 ? "clicks" : "spent_clicks";
-
-        if (uses === "clicks") {
-            if (data?.at(0)?.clicks >= rNumber) {
-
-                const { error: clErr } = await supabaseClient
-                .from('instant_data')
-                .update({
-                    clicks: data?.at(0)?.clicks - rNumber,
-                    multiplier: newMult
-                })
-                .eq('id', 1)
+            let newMult: Number;
+            const gachaMult = Math.random()
+            if (gachaMult < 0.85) {
+                newMult = Number((Math.random() * 1 + 1).toFixed(1));
+            } else {
+                newMult = Number((Math.random() * 3 + 3).toFixed(1));
             }
-        } else {
-            if (data?.at(0)?.spent_clicks >= rNumber) {
 
-                const { error: clErr } = await supabaseClient
-                .from('instant_data')
-                .update({
-                    spent_clicks: data?.at(0)?.spent_clicks - rNumber,
-                    multiplier: newMult
-                })
-                .eq('id', 1)
+            const uses = Math.random() < 0.5 ? "clicks" : "spent_clicks";
+
+            if (uses === "clicks") {
+                if (data?.at(0)?.clicks >= rNumber) {
+
+                    const { error: clErr } = await supabaseClient
+                    .from('instant_data')
+                    .update({
+                        clicks: data?.at(0)?.clicks - rNumber,
+                        multiplier: newMult
+                    })
+                    .eq('id', 1)
+                }
+            } else {
+                if (data?.at(0)?.spent_clicks >= rNumber) {
+
+                    const { error: clErr } = await supabaseClient
+                    .from('instant_data')
+                    .update({
+                        spent_clicks: data?.at(0)?.spent_clicks - rNumber,
+                        multiplier: newMult
+                    })
+                    .eq('id', 1)
+                }
             }
         }
     },
@@ -174,8 +178,7 @@ export const actions = {
     },
 
     ascend: async ({ request }) => {
-        const { data, error } = await supabaseClient
-        .rpc("dec10")
+        console.log("Oops!")
     }
 
 }

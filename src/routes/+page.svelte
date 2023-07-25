@@ -6,6 +6,7 @@
     let multiplier: number = 1;
     let spentClicks: number = 0;
     let message: String|null = null;
+    $: spendNumber = 100 + (Math.floor(Math.E * multiplier + ((number +spentClicks)/25000)))
 
     interface ShopItems {
         id: number,
@@ -116,10 +117,10 @@
                     <div class="flex py-2">
                         <button class="btn btn-primary flex flex-1" formaction="?/updateClicks">Click</button>
 
-                        {#if number < 100}
-                            <button class="flex flex-1 btn btn-error btn-disabled">Spend 100 clicks</button>
+                        {#if number < spendNumber}
+                            <button class="flex flex-1 btn btn-error btn-disabled">Spend {spendNumber} clicks</button>
                         {:else}
-                            <button class="flex flex-1 btn btn-error" formaction="?/spendClicks">Spend 100 clicks</button>
+                            <button class="flex flex-1 btn btn-error" formaction="?/spendClicks">Spend {spendNumber} clicks</button>
                         {/if}
                     </div>
                 </form>
