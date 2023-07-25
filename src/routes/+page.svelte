@@ -189,10 +189,10 @@
 
                             <button class="btn btn-primary" formaction="?/finalClicks">Click</button>
 
-                            {#if unlockedClicks >= (1000000 + Math.ceil((number / multiplier) + spentClicks))}
-                                <button class="btn btn-warning" formaction="?/ascend">Let the world see ({(1000000 + Math.ceil((number / multiplier) + spentClicks))})</button>
+                            {#if unlockedClicks >= (1000000 + Math.ceil((number * (multiplier/2)) + spentClicks))}
+                                <button class="btn btn-warning" formaction="?/ascend">Let the world see ({(1000000 + Math.ceil((number * (multiplier/2)) + spentClicks))})</button>
                             {:else}
-                                <button class="btn btn-warning btn-disabled">Let the world see ({(1000000 + Math.ceil((number / multiplier) + spentClicks))})</button>
+                                <button class="btn btn-warning btn-disabled">Let the world see ({(1000000 + Math.ceil((number * (multiplier/2)) + spentClicks))})</button>
                             {/if}
 
                             {#if message != null}

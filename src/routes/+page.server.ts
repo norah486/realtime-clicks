@@ -27,6 +27,7 @@ export const actions = {
 
         if (data?.at(0)?.clicks != null) {
 
+            // This gives extra points because the items don't account for the multiplier of 0
             let clickPlus = ( 1 * Math.floor( (data?.at(0)?.multiplier * (1 + data?.at(0)?.spent_clicks / 100000)) + shopItemsGives ) )
 
             const { error } = await supabaseClient
@@ -204,10 +205,10 @@ export const actions = {
         .from('instant_data')
         .select()
 
-        if (data?.at(0)?.unlocked_clicks >= (1000000 + ((data?.at(0)?.clicks / data?.at(0)?.multiplier) + data?.at(0)?.spent_clicks))) {
+        if (data?.at(0)?.unlocked_clicks >= (1000000 + ((data?.at(0)?.clicks * (data?.at(0)?.multiplier/2)) + data?.at(0)?.spent_clicks))) {
             const { error } = await supabaseClient
             .rpc("ascend", {
-                required: (1000000 + ((data?.at(0)?.clicks / data?.at(0)?.multiplier) + data?.at(0)?.spent_clicks))
+                required: (1000000 + ((data?.at(0)?.clicks * (data?.at(0)?.multiplier/2)) + data?.at(0)?.spent_clicks))
             })
         }
     }
