@@ -6,7 +6,7 @@
     let multiplier: number = 1;
     let spentClicks: number = 0;
     let message: String|null = null;
-    $: spendNumber = 100 + (Math.floor(Math.E * multiplier + ((number +spentClicks)/25000)))
+    $: spendNumber = 100 + (Math.floor(Math.E * multiplier + (((number + spentClicks))/250) * multiplier))
     
     let unlocked: boolean = false;
     let unlockedClicks: number;
