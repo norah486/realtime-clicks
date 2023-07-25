@@ -178,6 +178,10 @@
                                 </table>
                             </div>
                         {/if}
+
+                        {#if message != null}
+                            <p class="py-2 font-bold font-mono text-xl text-fuchsia-300">{message}</p>
+                        {/if}
                     {/await}
 
                 {:else}
