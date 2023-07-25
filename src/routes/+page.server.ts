@@ -22,7 +22,7 @@ export const actions = {
         }
 
         const { data, error } = await supabaseClient
-        .from('instant-data')
+        .from('instant_data')
         .select("clicks, multiplier, spent_clicks")
 
         if (data?.at(0)?.clicks != null) {
@@ -30,7 +30,7 @@ export const actions = {
             let clickPlus = ( 1 * Math.floor( (data?.at(0)?.multiplier * (1 + data?.at(0)?.spent_clicks / 100000)) + shopItemsGives ) )
 
             const { error } = await supabaseClient
-            .from('instant-data')
+            .from('instant_data')
             .update({ clicks: data?.at(0)?.clicks + clickPlus })
             .eq('id', 1)
 
@@ -39,13 +39,13 @@ export const actions = {
 
     spendClicks: async ({ request }) => {
         const { data, error } = await supabaseClient
-        .from('instant-data')
+        .from('instant_data')
         .select("clicks, multiplier, spent_clicks")
 
         if (data?.at(0)?.clicks >= 100) {
 
             const { error } = await supabaseClient
-            .from('instant-data')
+            .from('instant_data')
             .update({ clicks: data?.at(0)?.clicks - 100, spent_clicks: data?.at(0)?.spent_clicks + 100 })
             .eq('id', 1)
 
@@ -63,13 +63,13 @@ export const actions = {
         .eq('code_name', name)
         
         const { data: clickData, error: clickErr } = await supabaseClient
-        .from('instant-data')
+        .from('instant_data')
         .select()
 
         if (clickData?.at(0)?.clicks >= shopData?.at(0)?.cost) {
 
             const { error: clicksErr } = await supabaseClient
-            .from('instant-data')
+            .from('instant_data')
             .update({
                 clicks: clickData?.at(0)?.clicks - shopData?.at(0)?.cost
             })
@@ -99,13 +99,13 @@ export const actions = {
         .eq('code_name', name)
         
         const { data: clickData, error: clickErr } = await supabaseClient
-        .from('instant-data')
+        .from('instant_data')
         .select()
 
         if (clickData?.at(0)?.spent_clicks >= shopData?.at(0)?.cost) {
 
             const { error: clicksErr } = await supabaseClient
-            .from('instant-data')
+            .from('instant_data')
             .update({
                 spent_clicks: clickData?.at(0)?.spent_clicks - shopData?.at(0)?.cost
             })
@@ -124,8 +124,14 @@ export const actions = {
         
     },
 
+    test: async ({ request }) => {
+        const { data, error } = await supabaseClient
+        .rpc("incrementValue")
+    },
+
     ascend: async ({ request }) => {
-        console.log("You shouldn't be here right now.")
+        const { data, error } = await supabaseClient
+        .rpc("dec10")
     }
 
 }

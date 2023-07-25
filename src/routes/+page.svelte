@@ -21,7 +21,7 @@
 
     async function getCurrent() {
         const { data, error } = await supabaseClient
-        .from('instant-data')
+        .from('instant_data')
         .select()
 
         if (data?.at(0)?.clicks != null) {
@@ -53,7 +53,7 @@
     
     supabaseClient
         .channel('any')
-        .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'instant-data' }, payload => {
+        .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'instant_data' }, payload => {
                 number = payload.new.clicks
                 multiplier = payload.new.multiplier
                 spentClicks = payload.new.spent_clicks
@@ -124,9 +124,11 @@
                     </div>
                 </form>
 
-                <div class="flex flex-1 justify-items-center justify-center py-3">
-                    <button class="btn btn-warning btn-disabled justify-center self-center align-middle justify-items-center" formaction="?/ascend">Let the world see</button>
-                </div>
+                <form method="POST" use:enhance>
+                    <div class="flex flex-1 justify-items-center justify-center py-3">
+                        <button class="btn btn-warning btn-disabled justify-center self-center align-middle justify-items-center" formaction="?/ascend">Let the world see</button>
+                    </div>
+                </form>
 
                 {#if multiplier < 1}
                     <p class="text-sm py-2 text-sky-500">Multiplier: x{multiplier}</p>
