@@ -125,7 +125,8 @@
                 </form>
 
                 <form method="POST" use:enhance>
-                    <div class="flex flex-1 justify-items-center justify-center py-3">
+                    <div class="flex flex-1 justify-items-center justify-center py-3 gap-3">
+                        <button class="btn btn-secondary" formaction="?/gamble">Gamble</button>
                         <button class="btn btn-warning btn-disabled justify-center self-center align-middle justify-items-center" formaction="?/ascend">Let the world see</button>
                     </div>
                 </form>

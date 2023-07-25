@@ -30,9 +30,9 @@ export const actions = {
             let clickPlus = ( 1 * Math.floor( (data?.at(0)?.multiplier * (1 + data?.at(0)?.spent_clicks / 100000)) + shopItemsGives ) )
 
             const { error } = await supabaseClient
-            .from('instant_data')
-            .update({ clicks: data?.at(0)?.clicks + clickPlus })
-            .eq('id', 1)
+            .rpc("incrementClicks", {
+                extra: clickPlus
+            })
 
         }
     },
@@ -45,9 +45,9 @@ export const actions = {
         if (data?.at(0)?.clicks >= 100) {
 
             const { error } = await supabaseClient
-            .from('instant_data')
-            .update({ clicks: data?.at(0)?.clicks - 100, spent_clicks: data?.at(0)?.spent_clicks + 100 })
-            .eq('id', 1)
+            .rpc("decreaseClicks", {
+                amount: 100
+            })
 
         }
     },
@@ -124,9 +124,53 @@ export const actions = {
         
     },
 
+    gamble: async ({ request }) => {
+        const { data, error } = await supabaseClient
+        .from('instant_data')
+        .select()
+
+        const rNumber = Math.floor(Math.random() * 3500) + 1;
+
+        let newMult: Number;
+        const gachaMult = Math.random()
+        if (gachaMult < 0.85) {
+            newMult = Number((Math.random() * 1 + 1).toFixed(1));
+        } else {
+            newMult = Number((Math.random() * 3 + 3).toFixed(1));
+        }
+
+        const uses = Math.random() < 0.5 ? "clicks" : "spent_clicks";
+
+        if (uses === "clicks") {
+            if (data?.at(0)?.clicks >= rNumber) {
+
+                const { error: clErr } = await supabaseClient
+                .from('instant_data')
+                .update({
+                    clicks: data?.at(0)?.clicks - rNumber,
+                    multiplier: newMult
+                })
+                .eq('id', 1)
+            }
+        } else {
+            if (data?.at(0)?.spent_clicks >= rNumber) {
+
+                const { error: clErr } = await supabaseClient
+                .from('instant_data')
+                .update({
+                    spent_clicks: data?.at(0)?.spent_clicks - rNumber,
+                    multiplier: newMult
+                })
+                .eq('id', 1)
+            }
+        }
+    },
+
     test: async ({ request }) => {
         const { data, error } = await supabaseClient
-        .rpc("incrementValue")
+        .rpc("test")
+
+        console.log(error)
     },
 
     ascend: async ({ request }) => {
