@@ -71,7 +71,7 @@ export const actions = {
         .from('instant_data')
         .select("clicks, multiplier, spent_clicks")
 
-        const spendAmount = 100 + (Math.floor(Math.E * data?.at(0)?.multiplier + ((data?.at(0)?.clicks + data?.at(0)?.spent_clicks)/250) * data?.at(0)?.multiplier))
+        const spendAmount = 100 + (Math.floor(Math.E * data?.at(0)?.multiplier + (((data?.at(0)?.clicks + data?.at(0)?.spent_clicks))/250) * data?.at(0)?.multiplier))
 
         if (data?.at(0)?.clicks >= spendAmount) {
 
