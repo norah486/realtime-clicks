@@ -37,6 +37,35 @@ export const actions = {
         }
     },
 
+    finalClicks: async ({ request }) => {
+        let shopItemsGives: number = 0;
+
+        const { data: shopData, error: shopErr} = await supabaseClient
+        .from('shop')
+        .select()
+
+        if (shopData) {
+            shopData.forEach(item => {
+                shopItemsGives += ( item.gives * item.amount )
+            });
+        }
+
+        const { data, error } = await supabaseClient
+        .from('instant_data')
+        .select("clicks, multiplier, spent_clicks")
+
+        if (data?.at(0)?.clicks != null) {
+
+            let clickPlus = ( 1 * Math.floor( (data?.at(0)?.multiplier * (1 + data?.at(0)?.spent_clicks / 100000)) + shopItemsGives ) )
+
+            const { error } = await supabaseClient
+            .rpc("finalIncrement", {
+                extra: clickPlus
+            })
+
+        }
+    },
+
     spendClicks: async ({ request }) => {
         const { data, error } = await supabaseClient
         .from('instant_data')
@@ -170,15 +199,17 @@ export const actions = {
         }
     },
 
-    test: async ({ request }) => {
-        const { data, error } = await supabaseClient
-        .rpc("test")
-
-        console.log(error)
-    },
-
     ascend: async ({ request }) => {
-        console.log("Oops!")
+        const { data, error } = await supabaseClient
+        .from('instant_data')
+        .select()
+
+        if (data?.at(0)?.unlocked_clicks >= (1000000 + ((data?.at(0)?.clicks / data?.at(0)?.multiplier) + data?.at(0)?.spent_clicks))) {
+            const { error } = await supabaseClient
+            .rpc("ascend", {
+                required: (1000000 + ((data?.at(0)?.clicks / data?.at(0)?.multiplier) + data?.at(0)?.spent_clicks))
+            })
+        }
     }
 
 }
